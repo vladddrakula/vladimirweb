@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vladimír Bartl</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&family=Instrument+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --white: #f5f3ef;
+    --warm-white: #ece9e3;
+    --grey-light: #c8c4bc;
+    --grey-mid: #8a8680;
+    --grey-dark: #3a3834;
+    --accent: #c4a882;
+    --accent-dim: #9a8468;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Instrument Sans', sans-serif;
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* CUSTOM CURSOR */
+  .cursor {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 36px;
+    height: 36px;
+    border: 1px solid rgba(196, 168, 130, 0.4);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.15s ease, width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
+  }
+  a:hover ~ .cursor, button:hover ~ .cursor { width: 14px; height: 14px; }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem 4rem;
+    mix-blend-mode: normal;
+  }
+
+  .nav-logo {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--grey-light);
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 3rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--grey-mid);
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  .nav-links a:hover { color: var(--white); }
+
+  /* SECTIONS */
+  section { position: relative; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: end;
+    padding: 0 4rem 6rem;
+    gap: 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(ellipse 60% 60% at 80% 20%, rgba(196,168,130,0.04) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-bg-number {
+    position: absolute;
+    top: 50%;
+    right: -2rem;
+    transform: translateY(-55%) rotate(90deg);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22vw;
+    font-weight: 300;
+    color: rgba(255,255,255,0.02);
+    letter-spacing: -0.05em;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
+  .hero-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent-dim);
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.3s forwards;
+  }
+
+  .hero-headline {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(3.5rem, 7vw, 7rem);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    color: var(--white);
+    opacity: 0;
+    animation: fadeUp 0.9s ease 0.5s forwards;
+  }
+
+  .hero-headline em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 3rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .hero-sub {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--grey-mid);
+    max-width: 28rem;
+    opacity: 0;
+    animation: fadeUp 0.9s ease 0.7s forwards;
+  }
+
+  .hero-sub strong {
+    color: var(--grey-light);
+    font-weight: 400;
+  }
+
+  .hero-cta-group {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    opacity: 0;
+    animation: fadeUp 0.9s ease 0.9s forwards;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    padding: 0.85rem 2.2rem;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+  .btn-primary:hover { background: var(--accent); color: var(--black); }
+
+  .btn-ghost {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--grey-mid);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    padding-bottom: 2px;
+    transition: color 0.3s ease, border-color 0.3s ease;
+  }
+  .btn-ghost:hover { color: var(--white); border-color: var(--grey-mid); }
+
+  .hero-divider {
+    position: absolute;
+    bottom: 0;
+    left: 4rem;
+    right: 4rem;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--grey-dark) 30%, var(--grey-dark) 70%, transparent);
+  }
+
+  /* TICKER */
+  .ticker {
+    padding: 1.4rem 0;
+    border-bottom: 1px solid var(--grey-dark);
+    overflow: hidden;
+    background: var(--black);
+  }
+
+  .ticker-inner {
+    display: flex;
+    gap: 0;
+    animation: ticker 22s linear infinite;
+    white-space: nowrap;
+  }
+
+  .ticker-item {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--grey-dark);
+    padding: 0 3rem;
+    flex-shrink: 0;
+  }
+
+  .ticker-sep {
+    color: var(--accent-dim);
+    padding: 0 0.5rem;
+  }
+
+  @keyframes ticker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* PHILOSOPHY */
+  .philosophy {
+    padding: 10rem 4rem;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 8rem;
+    align-items: start;
+    border-bottom: 1px solid var(--grey-dark);
+  }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent-dim);
+    position: sticky;
+    top: 6rem;
+  }
+
+  .section-label span {
+    display: block;
+    color: var(--grey-dark);
+    margin-top: 0.4rem;
+  }
+
+  .philosophy-content {
+    display: flex;
+    flex-direction: column;
+    gap: 5rem;
+  }
+
+  .belief-block {
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    gap: 2rem;
+    align-items: start;
+    padding-bottom: 4rem;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .belief-block:last-child { border-bottom: none; padding-bottom: 0; }
+
+  .belief-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--accent-dim);
+    padding-top: 0.6rem;
+  }
+
+  .belief-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.8rem, 3vw, 2.8rem);
+    font-weight: 300;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    color: var(--white);
+  }
+
+  .belief-sub {
+    font-size: 0.92rem;
+    color: var(--grey-mid);
+    margin-top: 1.2rem;
+    line-height: 1.7;
+    max-width: 36rem;
+    font-family: 'Instrument Sans', sans-serif;
+  }
+
+  /* ABOUT */
+  .about {
+    padding: 10rem 4rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8rem;
+    border-bottom: 1px solid var(--grey-dark);
+    position: relative;
+  }
+
+  .about::before {
+    content: 'VB';
+    position: absolute;
+    right: 4rem;
+    top: 8rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18rem;
+    font-weight: 300;
+    line-height: 1;
+    color: rgba(255,255,255,0.025);
+    letter-spacing: -0.06em;
+    pointer-events: none;
+  }
+
+  .about-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.3rem, 2.2vw, 1.9rem);
+    font-weight: 300;
+    line-height: 1.5;
+    color: var(--grey-light);
+    padding-top: 3rem;
+  }
+
+  .about-text p { margin-bottom: 2rem; }
+  .about-text p:last-child { margin-bottom: 0; }
+
+  .about-text strong {
+    color: var(--white);
+    font-weight: 400;
+  }
+
+  .about-text em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .about-right {
+    padding-top: 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 3.5rem;
+  }
+
+  .about-stat {
+    border-left: 1px solid var(--grey-dark);
+    padding-left: 2rem;
+  }
+
+  .about-stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3.5rem;
+    font-weight: 300;
+    line-height: 1;
+    color: var(--accent);
+    letter-spacing: -0.02em;
+  }
+
+  .about-stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--grey-mid);
+    margin-top: 0.5rem;
+  }
+
+  .about-stat-desc {
+    font-size: 0.9rem;
+    color: var(--grey-dark);
+    margin-top: 0.5rem;
+    line-height: 1.5;
+  }
+
+  /* HOW I WORK */
+  .how {
+    padding: 10rem 4rem;
+    border-bottom: 1px solid var(--grey-dark);
+  }
+
+  .how-header {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 8rem;
+    margin-bottom: 7rem;
+    align-items: end;
+  }
+
+  .how-headline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.5rem, 4vw, 4.5rem);
+    font-weight: 300;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--white);
+  }
+
+  .how-intro {
+    font-size: 1.05rem;
+    color: var(--grey-mid);
+    line-height: 1.8;
+    max-width: 38rem;
+  }
+
+  .how-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+  }
+
+  .how-step {
+    padding: 3rem 3rem 3rem 0;
+    border-right: 1px solid var(--grey-dark);
+    position: relative;
+  }
+  .how-step:last-child { border-right: none; padding-right: 0; }
+  .how-step:not(:first-child) { padding-left: 3rem; }
+
+  .how-step-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--accent-dim);
+    letter-spacing: 0.15em;
+    margin-bottom: 2rem;
+  }
+
+  .how-step-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--white);
+    line-height: 1.2;
+    margin-bottom: 1.2rem;
+  }
+
+  .how-step-text {
+    font-size: 0.88rem;
+    color: var(--grey-mid);
+    line-height: 1.75;
+  }
+
+  /* OFFERINGS */
+  .offerings {
+    padding: 10rem 4rem;
+    border-bottom: 1px solid var(--grey-dark);
+  }
+
+  .offerings-header {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 8rem;
+    margin-bottom: 6rem;
+    align-items: end;
+  }
+
+  .offerings-headline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.5rem, 4vw, 4.5rem);
+    font-weight: 300;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--white);
+  }
+
+  .offerings-note {
+    font-size: 0.95rem;
+    color: var(--grey-mid);
+    line-height: 1.7;
+    max-width: 34rem;
+  }
+
+  .offering-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .offering-item {
+    display: grid;
+    grid-template-columns: 4rem 1fr 1fr auto;
+    gap: 3rem;
+    align-items: start;
+    padding: 4rem 0;
+    border-bottom: 1px solid var(--grey-dark);
+    transition: background 0.3s ease;
+    cursor: default;
+  }
+  .offering-item:first-child { border-top: 1px solid var(--grey-dark); }
+
+  .offering-item:hover .offering-title { color: var(--accent); }
+
+  .offering-idx {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--grey-dark);
+    padding-top: 0.6rem;
+    letter-spacing: 0.1em;
+  }
+
+  .offering-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+    font-weight: 300;
+    color: var(--white);
+    line-height: 1.2;
+    transition: color 0.3s ease;
+  }
+
+  .offering-desc {
+    font-size: 0.88rem;
+    color: var(--grey-mid);
+    line-height: 1.75;
+    padding-top: 0.5rem;
+  }
+
+  .offering-tags {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-top: 0.4rem;
+  }
+
+  .offering-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--grey-dark);
+    border: 1px solid var(--grey-dark);
+    padding: 0.3rem 0.8rem;
+    white-space: nowrap;
+    align-self: flex-start;
+  }
+
+  /* THOUGHTS */
+  .thoughts {
+    padding: 10rem 4rem;
+    border-bottom: 1px solid var(--grey-dark);
+  }
+
+  .thoughts-header {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 8rem;
+    margin-bottom: 6rem;
+    align-items: end;
+  }
+
+  .thoughts-headline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.5rem, 4vw, 4.5rem);
+    font-weight: 300;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--white);
+  }
+
+  .thoughts-sub {
+    font-size: 0.95rem;
+    color: var(--grey-mid);
+    line-height: 1.7;
+  }
+
+  .thought-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+  }
+
+  .thought-card {
+    padding: 3.5rem 3rem 3.5rem 0;
+    border-right: 1px solid var(--grey-dark);
+  }
+  .thought-card:last-child { border-right: none; padding-right: 0; }
+  .thought-card:not(:first-child) { padding-left: 3rem; }
+
+  .thought-topic {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent-dim);
+    margin-bottom: 1.5rem;
+  }
+
+  .thought-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.3rem, 2vw, 1.7rem);
+    font-style: italic;
+    font-weight: 300;
+    line-height: 1.4;
+    color: var(--white);
+    margin-bottom: 1.5rem;
+  }
+
+  .thought-body {
+    font-size: 0.86rem;
+    color: var(--grey-mid);
+    line-height: 1.75;
+  }
+
+  /* CONTACT */
+  .contact {
+    padding: 10rem 4rem 8rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8rem;
+    align-items: end;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .contact::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 60%;
+    background: radial-gradient(ellipse 50% 80% at 30% 100%, rgba(196,168,130,0.05) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .contact-headline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3rem, 6vw, 6.5rem);
+    font-weight: 300;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    color: var(--white);
+  }
+
+  .contact-headline em {
+    font-style: italic;
+    color: var(--accent);
+    display: block;
+  }
+
+  .contact-right {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    justify-content: flex-end;
+  }
+
+  .contact-line {
+    font-size: 1rem;
+    color: var(--grey-mid);
+    line-height: 1.7;
+    max-width: 30rem;
+  }
+
+  .contact-links {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  .contact-link {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    text-decoration: none;
+    color: var(--grey-light);
+    font-size: 1.05rem;
+    transition: color 0.3s ease;
+    group: true;
+  }
+  .contact-link:hover { color: var(--white); }
+
+  .contact-link-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--grey-dark);
+    width: 5rem;
+    flex-shrink: 0;
+  }
+
+  .contact-link-value {
+    color: inherit;
+    transition: color 0.3s;
+  }
+
+  .contact-closing {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--grey-dark);
+    padding-top: 1rem;
+    border-top: 1px solid var(--grey-dark);
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 2.5rem 4rem;
+    border-top: 1px solid var(--grey-dark);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-left {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--grey-dark);
+  }
+
+  .footer-right {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--grey-dark);
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar-track { background: var(--black); }
+  ::-webkit-scrollbar-thumb { background: var(--grey-dark); border-radius: 2px; }
+
+  /* RESPONSIVE */
+  @media (max-width: 1024px) {
+    nav { padding: 1.5rem 2rem; }
+    .hero { padding: 0 2rem 5rem; grid-template-columns: 1fr; gap: 3rem; }
+    .hero-right { max-width: 100%; }
+    .philosophy, .about, .how-header, .offerings-header, .thoughts-header { grid-template-columns: 1fr; gap: 3rem; }
+    .philosophy, .about, .how, .offerings, .thoughts, .contact { padding: 6rem 2rem; }
+    .how-steps { grid-template-columns: 1fr 1fr; }
+    .thought-grid { grid-template-columns: 1fr; }
+    .offering-item { grid-template-columns: 3rem 1fr; gap: 1.5rem; }
+    .offering-tags { display: none; }
+    .contact { grid-template-columns: 1fr; gap: 3rem; }
+    footer { padding: 2rem; flex-direction: column; gap: 1rem; text-align: center; }
+    .about::before { display: none; }
+    .how-step { border-right: none; border-bottom: 1px solid var(--grey-dark); padding: 2.5rem 0; }
+    .how-step:not(:first-child) { padding-left: 0; }
+    .thought-card { border-right: none; border-bottom: 1px solid var(--grey-dark); padding: 2.5rem 0; }
+    .thought-card:not(:first-child) { padding-left: 0; }
+  }
+
+  @media (max-width: 640px) {
+    .nav-links { display: none; }
+    .hero-headline { font-size: 3rem; }
+    .how-steps { grid-template-columns: 1fr; }
+    .hero-bg-number { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Custom Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Vladimír Bartl</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#how">How I Work</a></li>
+    <li><a href="#offerings">Offerings</a></li>
+    <li><a href="#thoughts">Thinking</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-number">clarity</div>
+  <div class="hero-left">
+    <div class="hero-label">Strategic Advisor · Prague / Remote</div>
+    <h1 class="hero-headline">
+      The problem<br>
+      isn't the<br>
+      <em>information.</em>
+    </h1>
+  </div>
+  <div class="hero-right">
+    <p class="hero-sub">
+      Most people have enough data, enough options, enough advice.<br><br>
+      What they lack is <strong>clarity</strong> — on what matters, what to say, and what to do next.<br><br>
+      I help founders, operators, and sales leaders cut through the noise and find the signal.
+    </p>
+    <div class="hero-cta-group">
+      <a href="#contact" class="btn-primary">Work with me</a>
+      <a href="#about" class="btn-ghost">Learn more →</a>
+    </div>
+  </div>
+  <div class="hero-divider"></div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-inner">
+    <span class="ticker-item">Clarity is leverage <span class="ticker-sep">·</span></span>
+    <span class="ticker-item">Empathy outperforms tactics <span class="ticker-sep">·</span></span>
+    <span class="ticker-item">The way you communicate is the outcome <span class="ticker-sep">·</span></span>
+    <span class="ticker-item">You don't need more input. You need better thinking <span class="ticker-sep">·</span></span>
+    <span class="ticker-item">Noise is the enemy <span class="ticker-sep">·</span></span>
+    <span class="ticker-item">Clarity is leverage <span class="ticker-sep">·</span></span>
+    <span class="ticker-item">Empathy outperforms tactics <span class="ticker-sep">·</span></span>
+    <span class="ticker-item">The way you communicate is the outcome <span class="ticker-sep">·</span></span>
+    <span class="ticker-item">You don't need more input. You need better thinking <span class="ticker-sep">·</span></span>
+    <span class="ticker-item">Noise is the enemy <span class="ticker-sep">·</span></span>
+  </div>
+</div>
+
+<!-- PHILOSOPHY -->
+<section class="philosophy" id="philosophy">
+  <div class="section-label reveal">
+    Core Beliefs
+    <span>01</span>
+  </div>
+  <div class="philosophy-content">
+    <div class="belief-block reveal">
+      <div class="belief-num">01</div>
+      <div>
+        <div class="belief-text">"Most people don't have a strategy problem. They have a clarity problem."</div>
+        <div class="belief-sub">Strategy without clarity is just motion. When you know exactly what you're solving for, the path usually becomes obvious.</div>
+      </div>
+    </div>
+    <div class="belief-block reveal">
+      <div class="belief-num">02</div>
+      <div>
+        <div class="belief-text">"Empathy outperforms tactics."</div>
+        <div class="belief-sub">In sales, in leadership, in every high-stakes conversation — the person who understands what the other side actually needs wins. Not the one with the best script.</div>
+      </div>
+    </div>
+    <div class="belief-block reveal">
+      <div class="belief-num">03</div>
+      <div>
+        <div class="belief-text">"The way you communicate is the outcome."</div>
+        <div class="belief-sub">You can have the right answer and still lose — if you can't make it land. Communication isn't packaging. It's the product.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div>
+    <div class="section-label reveal">
+      About
+      <span>02</span>
+    </div>
+    <div class="about-text reveal" style="transition-delay: 0.1s">
+      <p>I didn't start in a boardroom. I started in the trenches — support queues, demo calls, cold outreach, closed deals, lost deals. <strong>Seven years of B2B SaaS</strong>, working through every layer of the customer journey.</p>
+      <p>I built Storyblok's Benelux market from nothing. Not with a playbook — with <em>attention</em>. Learning what mattered to buyers in that market. Adjusting. Iterating. Winning trust before asking for budget.</p>
+      <p>I've worked inside structured organisations and chaotic ones. I've seen sales-led and product-led growth models, enterprise and mid-market dynamics, pipeline anxiety and positioning blind spots.</p>
+      <p>Today I also work inside a marketing agency — which means I see real business problems across industries, in real time. My thinking is grounded, not academic.</p>
+      <p>Outside of work, I'm a co-parent. I've navigated conflict, built routines, learned to stay grounded when things feel unstable. <strong>That experience shapes how I think</strong> about pressure, communication, and what it means to make good decisions under uncertainty.</p>
+    </div>
+  </div>
+  <div class="about-right">
+    <div class="about-stat reveal">
+      <div class="about-stat-num">7+</div>
+      <div class="about-stat-label">Years in B2B SaaS</div>
+      <div class="about-stat-desc">From support to pre-sales to enterprise account management</div>
+    </div>
+    <div class="about-stat reveal" style="transition-delay: 0.1s">
+      <div class="about-stat-num">Benelux</div>
+      <div class="about-stat-label">Market built from scratch</div>
+      <div class="about-stat-desc">Storyblok's regional expansion — zero to revenue</div>
+    </div>
+    <div class="about-stat reveal" style="transition-delay: 0.2s">
+      <div class="about-stat-num">VOID</div>
+      <div class="about-stat-label">Personal brand in development</div>
+      <div class="about-stat-desc">Positioning, taste, and execution — built in public</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW I WORK -->
+<section class="how" id="how">
+  <div class="how-header">
+    <div>
+      <div class="section-label reveal">How I Work<span>03</span></div>
+      <h2 class="how-headline reveal" style="margin-top: 3rem">
+        No frameworks.<br>
+        No templates.<br>
+        Just thinking.
+      </h2>
+    </div>
+    <div class="how-intro reveal" style="transition-delay: 0.15s; padding-top: 3rem">
+      I don't show up with a slide deck of pre-built solutions. I show up with attention, honest questions, and a willingness to sit with complexity until something real emerges.<br><br>
+      What I offer is a thinking partnership — not a vendor relationship. The work is situational, direct, and built around your actual problem, not a generalised version of it.
+    </div>
+  </div>
+  <div class="how-steps">
+    <div class="how-step reveal">
+      <div class="how-step-num">Step 01</div>
+      <div class="how-step-title">Listening before speaking</div>
+      <div class="how-step-text">Every engagement starts with understanding. Not problem-diagnosis — genuine listening. What's actually happening, what's been tried, what's at stake.</div>
+    </div>
+    <div class="how-step reveal" style="transition-delay: 0.1s">
+      <div class="how-step-num">Step 02</div>
+      <div class="how-step-title">Finding the real question</div>
+      <div class="how-step-text">The stated problem is rarely the actual problem. I help you find the right question before we talk about answers. Most clarity comes from here.</div>
+    </div>
+    <div class="how-step reveal" style="transition-delay: 0.2s">
+      <div class="how-step-num">Step 03</div>
+      <div class="how-step-title">Honest, direct perspective</div>
+      <div class="how-step-text">I'll tell you what I see — without softening it into uselessness or sharpening it into cruelty. You came for signal, not reassurance.</div>
+    </div>
+    <div class="how-step reveal" style="transition-delay: 0.3s">
+      <div class="how-step-num">Step 04</div>
+      <div class="how-step-title">Practical from the start</div>
+      <div class="how-step-text">Clarity without direction is just philosophy. Every conversation ends with something concrete — a decision made, a path defined, or a priority set.</div>
+    </div>
+  </div>
+</section>
+
+<!-- OFFERINGS -->
+<section class="offerings" id="offerings">
+  <div class="offerings-header">
+    <div>
+      <div class="section-label reveal">Ways to Work Together<span>04</span></div>
+      <h2 class="offerings-headline reveal" style="margin-top: 3rem">
+        Simple.<br>
+        Intentional.<br>
+        Tailored.
+      </h2>
+    </div>
+    <div class="offerings-note reveal" style="transition-delay: 0.15s; padding-top: 3rem">
+      I don't offer packages. I offer thinking. Below are the shapes that thinking most often takes — but the work is always defined by the conversation we have first.
+    </div>
+  </div>
+
+  <div class="offering-list">
+    <div class="offering-item reveal">
+      <div class="offering-idx">01</div>
+      <div>
+        <div class="offering-title">Strategic Clarity Sessions</div>
+      </div>
+      <div class="offering-desc">
+        For founders and operators who are stuck in a fog of competing priorities, half-formed strategies, and too much noise. We cut through it together. Single session or ongoing.<br><br>
+        Ideal for: moments before a big decision, a pivot, or a period of stalled momentum.
+      </div>
+      <div class="offering-tags">
+        <span class="offering-tag">Founders</span>
+        <span class="offering-tag">Operators</span>
+        <span class="offering-tag">Strategy</span>
+      </div>
+    </div>
+    <div class="offering-item reveal" style="transition-delay: 0.1s">
+      <div class="offering-idx">02</div>
+      <div>
+        <div class="offering-title">Sales & Communication Advisory</div>
+      </div>
+      <div class="offering-desc">
+        How to position a deal. How to talk to a difficult stakeholder. How to communicate under pressure without losing the room. Built from real environments, not theory.<br><br>
+        Ideal for: sales leaders, AEs navigating complex deals, or anyone who needs their message to land.
+      </div>
+      <div class="offering-tags">
+        <span class="offering-tag">Sales Leaders</span>
+        <span class="offering-tag">Messaging</span>
+        <span class="offering-tag">B2B</span>
+      </div>
+    </div>
+    <div class="offering-item reveal" style="transition-delay: 0.2s">
+      <div class="offering-idx">03</div>
+      <div>
+        <div class="offering-title">Perspective Audit</div>
+      </div>
+      <div class="offering-desc">
+        An external, honest read on your business positioning, internal communication, or decision-making process. You're too close to see it clearly. I'm not.<br><br>
+        Ideal for: teams that sense something is off but can't name it.
+      </div>
+      <div class="offering-tags">
+        <span class="offering-tag">Positioning</span>
+        <span class="offering-tag">Internal Comms</span>
+        <span class="offering-tag">Audit</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- THOUGHTS -->
+<section class="thoughts" id="thoughts">
+  <div class="thoughts-header">
+    <div>
+      <div class="section-label reveal">Selected Thinking<span>05</span></div>
+      <h2 class="thoughts-headline reveal" style="margin-top: 3rem">
+        On clarity,<br>
+        people,<br>
+        and decisions.
+      </h2>
+    </div>
+    <div class="thoughts-sub reveal" style="transition-delay: 0.15s; padding-top: 3rem">
+      Short observations from years of working in high-pressure environments, managing people, closing deals, and thinking carefully about how humans actually make decisions.
+    </div>
+  </div>
+
+  <div class="thought-grid">
+    <div class="thought-card reveal">
+      <div class="thought-topic">On Sales</div>
+      <div class="thought-quote">"Objections are questions in disguise."</div>
+      <div class="thought-body">When a prospect pushes back, they're not saying no. They're saying they don't understand something yet — usually the value, the risk, or the relevance. The best closers are the best listeners.</div>
+    </div>
+    <div class="thought-card reveal" style="transition-delay: 0.1s">
+      <div class="thought-topic">On Positioning</div>
+      <div class="thought-quote">"If you're trying to talk to everyone, you're talking to no one."</div>
+      <div class="thought-body">Specificity is scary. It feels like you're leaving people out. But the alternative — vague, hedged, all-things-to-all-people messaging — reaches no one. The narrower the target, the deeper the resonance.</div>
+    </div>
+    <div class="thought-card reveal" style="transition-delay: 0.2s">
+      <div class="thought-topic">On Decisions</div>
+      <div class="thought-quote">"Urgency is often confusion wearing a deadline."</div>
+      <div class="thought-body">Most decisions that feel urgent are really decisions that feel unclear. Slow down, name the actual choice, and the path becomes obvious. The pressure usually dissolves with it.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div>
+    <div class="section-label reveal" style="margin-bottom: 4rem">
+      Contact
+      <span>06</span>
+    </div>
+    <h2 class="contact-headline reveal" style="transition-delay: 0.1s">
+      Let's find<br>
+      <em>the signal.</em>
+    </h2>
+  </div>
+  <div class="contact-right reveal" style="transition-delay: 0.2s">
+    <p class="contact-line">
+      If something on this page resonated — the thinking, the approach, a problem you're sitting with — reach out. I respond to every message personally.
+    </p>
+    <div class="contact-links">
+      <a href="mailto:hello@vladimirBartl.com" class="contact-link">
+        <span class="contact-link-label">Email</span>
+        <span class="contact-link-value">hello@vladimirBartl.com</span>
+      </a>
+      <a href="https://linkedin.com/in/vladimirBartl" target="_blank" class="contact-link">
+        <span class="contact-link-label">LinkedIn</span>
+        <span class="contact-link-value">linkedin.com/in/vladimirBartl</span>
+      </a>
+    </div>
+    <div class="contact-closing reveal" style="transition-delay: 0.3s">
+      No pitch decks. No intake forms. Just a conversation.
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left">© 2025 Vladimír Bartl · All Rights Reserved</div>
+  <div class="footer-right">Clarity. Perspective. Judgment.</div>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const cursorRing = document.getElementById('cursorRing');
+  let mouseX = 0, mouseY = 0;
+  let ringX = 0, ringY = 0;
+
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    cursor.style.left = mouseX + 'px';
+    cursor.style.top = mouseY + 'px';
+  });
+
+  function animateRing() {
+    ringX += (mouseX - ringX) * 0.12;
+    ringY += (mouseY - ringY) * 0.12;
+    cursorRing.style.left = ringX + 'px';
+    cursorRing.style.top = ringY + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.width = '14px';
+      cursor.style.height = '14px';
+      cursorRing.style.opacity = '0.6';
+      cursorRing.style.width = '52px';
+      cursorRing.style.height = '52px';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.width = '8px';
+      cursor.style.height = '8px';
+      cursorRing.style.opacity = '1';
+      cursorRing.style.width = '36px';
+      cursorRing.style.height = '36px';
+    });
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+  reveals.forEach(el => observer.observe(el));
+
+  // Smooth active nav
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(section => {
+      if (window.scrollY >= section.offsetTop - 200) {
+        current = section.getAttribute('id');
+      }
+    });
+    navLinks.forEach(link => {
+      link.style.color = link.getAttribute('href') === '#' + current
+        ? 'var(--white)'
+        : '';
+    });
+  });
+</script>
+
+</body>
+</html>
