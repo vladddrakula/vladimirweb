@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vladimír Bartl</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0c0b09;
+    --white: #f2efe9;
+    --dim: #7a776f;
+    --faint: #2e2d2a;
+    --accent: #b89a72;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 18px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  a { text-decoration: none; color: inherit; }
+
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2.2rem 4rem;
+  }
+
+  .nav-name {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+
+  .nav-contact {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--dim);
+    transition: color 0.25s;
+  }
+  .nav-contact:hover { color: var(--white); }
+
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 4rem 7rem;
+  }
+
+  .hero-headline {
+    font-size: clamp(3.8rem, 8vw, 9rem);
+    font-weight: 300;
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+    color: var(--white);
+    max-width: 14ch;
+    opacity: 0;
+    animation: up 1s ease 0.3s forwards;
+  }
+
+  .hero-headline em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    margin-top: 3rem;
+    font-size: 1.15rem;
+    color: var(--dim);
+    max-width: 38ch;
+    line-height: 1.7;
+    opacity: 0;
+    animation: up 1s ease 0.55s forwards;
+  }
+
+  .hero-cta {
+    margin-top: 3.5rem;
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border-bottom: 1px solid var(--accent);
+    padding-bottom: 3px;
+    opacity: 0;
+    animation: up 1s ease 0.75s forwards;
+    transition: opacity 0.25s;
+  }
+  .hero-cta:hover { opacity: 0.6; }
+
+  hr {
+    border: none;
+    border-top: 1px solid var(--faint);
+    margin: 0 4rem;
+  }
+
+  .about {
+    padding: 9rem 4rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8rem;
+    align-items: start;
+  }
+
+  .label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 2.5rem;
+  }
+
+  .about-text {
+    font-size: clamp(1.25rem, 2vw, 1.75rem);
+    line-height: 1.55;
+    color: #a09c94;
+  }
+
+  .about-text strong { color: var(--white); font-weight: 400; }
+  .about-text em { font-style: italic; color: var(--accent); }
+
+  .about-facts {
+    display: flex;
+    flex-direction: column;
+    gap: 3.5rem;
+    padding-top: 0.5rem;
+  }
+
+  .fact {
+    border-left: 1px solid var(--faint);
+    padding-left: 2rem;
+  }
+
+  .fact-num {
+    font-size: 3rem;
+    font-weight: 300;
+    line-height: 1;
+    color: var(--accent);
+    letter-spacing: -0.02em;
+  }
+
+  .fact-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-top: 0.5rem;
+  }
+
+  .offerings {
+    padding: 9rem 4rem;
+    border-top: 1px solid var(--faint);
+  }
+
+  .offering-row {
+    display: grid;
+    grid-template-columns: 2fr 3fr;
+    gap: 6rem;
+    padding: 4rem 0;
+    border-bottom: 1px solid var(--faint);
+    align-items: baseline;
+  }
+  .offering-row:first-of-type { border-top: 1px solid var(--faint); }
+
+  .offering-title {
+    font-size: clamp(1.4rem, 2.2vw, 2rem);
+    font-weight: 300;
+    line-height: 1.2;
+    color: var(--white);
+  }
+
+  .offering-desc {
+    font-size: 1rem;
+    color: var(--dim);
+    line-height: 1.75;
+  }
+
+  .contact {
+    padding: 9rem 4rem 8rem;
+    border-top: 1px solid var(--faint);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8rem;
+    align-items: end;
+  }
+
+  .contact-headline {
+    font-size: clamp(3rem, 6vw, 6.5rem);
+    font-weight: 300;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    color: var(--white);
+  }
+
+  .contact-headline em {
+    font-style: italic;
+    color: var(--accent);
+    display: block;
+  }
+
+  .contact-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .contact-line {
+    font-size: 1.05rem;
+    color: var(--dim);
+    line-height: 1.75;
+    max-width: 32ch;
+  }
+
+  .contact-links {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .contact-link {
+    display: flex;
+    gap: 2rem;
+    align-items: baseline;
+    font-size: 1.05rem;
+    color: #a09c94;
+    transition: color 0.25s;
+  }
+  .contact-link:hover { color: var(--white); }
+
+  .contact-link-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--faint);
+    width: 4.5rem;
+    flex-shrink: 0;
+  }
+
+  .contact-closing {
+    font-size: 0.9rem;
+    font-style: italic;
+    color: var(--faint);
+  }
+
+  footer {
+    padding: 2rem 4rem;
+    border-top: 1px solid var(--faint);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  footer span {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.on { opacity: 1; transform: none; }
+
+  @keyframes up {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 900px) {
+    nav { padding: 1.5rem 2rem; }
+    hr { margin: 0 2rem; }
+    .hero { padding: 0 2rem 5rem; }
+    .about, .contact { padding: 5rem 2rem; gap: 3rem; grid-template-columns: 1fr; }
+    .offerings { padding: 5rem 2rem; }
+    .offering-row { grid-template-columns: 1fr; gap: 1.5rem; }
+    footer { padding: 1.8rem 2rem; flex-direction: column; gap: 0.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-name">Vladimír Bartl</span>
+  <a href="#contact" class="nav-contact">Get in touch</a>
+</nav>
+
+<section class="hero">
+  <h1 class="hero-headline">
+    Clarity<br>
+    over<br>
+    <em>noise.</em>
+  </h1>
+  <p class="hero-sub">
+    I help founders, sales leaders, and operators cut through the fog — and find what actually matters.
+  </p>
+  <a href="#contact" class="hero-cta">Start a conversation →</a>
+</section>
+
+<hr>
+
+<section class="about">
+  <div>
+    <div class="label reveal">About</div>
+    <p class="about-text reveal" style="transition-delay:.1s">
+      Seven years in B2B SaaS. <strong>Built Storyblok's Benelux market from zero.</strong> Worked through every layer of the customer journey — support, training, pre-sales, sales.<br><br>
+      I've operated in structured organisations and chaotic ones. Closed deals, lost deals, and learned from both. Today I also work inside a marketing agency — which keeps my thinking <em>grounded in real problems.</em><br><br>
+      I don't sell frameworks. I sell thinking.
+    </p>
+  </div>
+  <div class="about-facts">
+    <div class="fact reveal">
+      <div class="fact-num">7+</div>
+      <div class="fact-label">Years in B2B SaaS</div>
+    </div>
+    <div class="fact reveal" style="transition-delay:.1s">
+      <div class="fact-num">Benelux</div>
+      <div class="fact-label">Market built from scratch</div>
+    </div>
+    <div class="fact reveal" style="transition-delay:.2s">
+      <div class="fact-num">PLG → Enterprise</div>
+      <div class="fact-label">Full motion spectrum</div>
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<section class="offerings">
+  <div class="label reveal">Ways to Work Together</div>
+
+  <div class="offering-row reveal" style="transition-delay:.05s">
+    <div class="offering-title">Strategic Clarity</div>
+    <div class="offering-desc">For founders and operators stuck between too many options and not enough direction. We untangle the thinking, define what actually matters, and make the next move obvious.</div>
+  </div>
+
+  <div class="offering-row reveal" style="transition-delay:.1s">
+    <div class="offering-title">Sales & Communication</div>
+    <div class="offering-desc">Messaging, deal strategy, stakeholder dynamics. How to communicate under pressure without losing the room. Built from real environments — not theory.</div>
+  </div>
+
+  <div class="offering-row reveal" style="transition-delay:.15s">
+    <div class="offering-title">Perspective Audit</div>
+    <div class="offering-desc">An honest, external read on your positioning, decision-making, or internal communication. You're too close. I'm not.</div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <h2 class="contact-headline reveal">
+    Let's<br>
+    <em>talk.</em>
+  </h2>
+  <div class="contact-body">
+    <p class="contact-line reveal" style="transition-delay:.1s">
+      If something here resonated — a problem you're sitting with, a decision you're circling — reach out. I respond to every message personally.
+    </p>
+    <div class="contact-links reveal" style="transition-delay:.2s">
+      <a href="mailto:hello@vladimirbartl.com" class="contact-link">
+        <span class="contact-link-tag">Email</span>
+        hello@vladimirbartl.com
+      </a>
+      <a href="https://linkedin.com/in/vladimirbartl" target="_blank" class="contact-link">
+        <span class="contact-link-tag">LinkedIn</span>
+        linkedin.com/in/vladimirbartl
+      </a>
+    </div>
+    <p class="contact-closing reveal" style="transition-delay:.3s">No intake forms. No pitch decks. Just a conversation.</p>
+  </div>
+</section>
+
+<footer>
+  <span>© 2025 Vladimír Bartl</span>
+  <span>Prague · Remote</span>
+</footer>
+
+<script>
+  const els = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  els.forEach(el => io.observe(el));
+</script>
+</body>
+</html>
